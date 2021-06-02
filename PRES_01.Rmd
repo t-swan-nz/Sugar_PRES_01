@@ -1,0 +1,84 @@
+---
+title: "Untitled"
+author: "Tom Swan"
+date: "02/06/2021"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(emmeans)
+library(lme4)
+library(tidyverse)
+library(psych) 
+library(stats) 
+library(MASS)
+library(car)
+library(cowplot)
+library(sjPlot)
+library(stargazer)
+library(arm)
+library(jtools)
+```
+
+Import the data
+```{r}
+PRES_data <- read.csv(file = "PRES_01_R.csv")
+str(PRES_data)
+```
+
+Create geom_boxplots showing distribution of data
+
+```{r}
+
+ggplot(PRES_data, aes(x=treatment, y= fructose_concentration))+ geom_boxplot() + geom_point() + facet_wrap(~day)
+
+
+```
+
+Run the LMM to see the effect of treatment and day (and interaction)
+
+```{r}
+
+PRES_data %>% plot(fructose_concentration)
+
+
+
+PRES_data_glm <- glm(fructose_concentration ~ day*treatment, data = PRES_data)
+summary(PRES_data_glm)
+Anova(PRES_data_glm)
+summ(PRES_data_glm)
+
+comparisons_PRES <- emmeans(PRES_data_glm, list(pairwise ~ treatment*day), adjust = "tukey")
+
+
+pwpm(comparisons_PRES)
+
+#use the contrasts function here
+#what I am wanting here is the comparison of each day with each treatment. At the moment it is giving me only day 14. 
+
+trt.vs.ctrl.emmc()
+
+
+
+
+PRES_data_residual <- resid(PRES_data_lm)
+
+plot(PRES_data$fructose_concentration, PRES_data_residual) + abline(0,0)
+
+#residuals looks okay...
+
+#trying log_fructose_concentration
+
+PRES_data_lm_log <- glm(log(fructose_concentration) ~ day, data = PRES_data)
+Anova(PRES_data_lm_log)
+emmeans(PRES_data_lm_log, list(pairwise ~ treatment))
+
+summary(PRES_data_lm_log)
+
+PRES_data_residual_log <- resid(PRES_data_lm_log)
+
+plot(PRES_data$fructose_concentration, PRES_data_residual_log) + abline(0,0)
+
+```
+
