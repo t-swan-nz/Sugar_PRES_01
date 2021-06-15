@@ -28,6 +28,8 @@ PRES_data_no_KOD <- read.csv(file = "PRES_01_no_KOD.csv")
 PRES_data_no_KOD$day <- as.factor(PRES_data_no_KOD$day)
 str(PRES_data_no_KOD)
 
+
+
 ```
 
 Testing for normality (data appears to be normal - parametric)
