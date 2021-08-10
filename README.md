@@ -1,4 +1,4 @@
 # Sugar_PRES_01
-Experiment concerned with examining the effects of preservation on fructose concentration
+Code associated with an experiment concerned with examining the effects of storage method on fructose concentration
 
 
